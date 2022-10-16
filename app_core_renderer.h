@@ -10,6 +10,16 @@
 #define MAX_DISPLAY_TEXT 512
 #define COLORED_SIZE 5
 
+enum {
+    COLOR_PRIMARY,
+    COLOR_SECONDARY,
+    COLOR_LIGHT,
+    COLOR_MEDIUM,
+    COLOR_DARK,
+    COLOR_PLAY,
+    COLOR_HILIGHT,
+};
+
 class App_Renderer {
 public:
     char text[MAX_DISPLAY_TEXT] = "";

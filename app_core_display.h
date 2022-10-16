@@ -17,16 +17,16 @@
 // Colors could be set per view...
 
 #define UI_COLOR_BG 0, 0, 0
-#define UI_COLOR_FONT 0xFF, 0xFF, 0xFF
-#define UI_COLOR_LABEL 150, 150, 150
-#define UI_COLOR_HEADER 100, 100, 100
+#define UI_COLOR_PRIMARY 0xFF, 0xFF, 0xFF
+#define UI_COLOR_SECONDARY 0xFF, 0xFF, 0xFF
+#define UI_COLOR_LIGHT 100, 100, 100
+#define UI_COLOR_MEDIUM 150, 150, 150
+#define UI_COLOR_DARK 190, 190, 190
 #define UI_COLOR_PLAY 122, 255, 0
-// #define UI_COLOR_STAR 255, 128, 0
-#define UI_COLOR_STAR 255, 255, 0
+#define UI_COLOR_HILIGHT 255, 255, 0
+
 #define UI_COLOR_CURSOR 0, 128, 255
-// #define UI_COLOR_SIGN 0, 255, 255
-// #define UI_COLOR_SIGN 255, 128, 0
-#define UI_COLOR_SIGN 190, 190, 190
+
 
 class App_Display : public App_Renderer {
 protected:
@@ -41,6 +41,36 @@ protected:
     virtual void drawPixel(int16_t x, int16_t y) = 0;
     virtual void drawCursor(int16_t x, int16_t y) = 0;
     virtual void setColor(uint8_t r, uint8_t g, uint8_t b) = 0;
+
+    void setColor(uint8_t color)
+    {
+        switch (color) {
+        case COLOR_PRIMARY:
+            setColor(UI_COLOR_PRIMARY);
+            break;
+        case COLOR_SECONDARY:
+            setColor(UI_COLOR_SECONDARY);
+            break;
+        case COLOR_LIGHT:
+            setColor(UI_COLOR_LIGHT);
+            break;
+        case COLOR_MEDIUM:
+            setColor(UI_COLOR_MEDIUM);
+            break;
+        case COLOR_DARK:
+            setColor(UI_COLOR_DARK);
+            break;
+        case COLOR_PLAY:
+            setColor(UI_COLOR_PLAY);
+            break;
+        case COLOR_HILIGHT:
+            setColor(UI_COLOR_HILIGHT);
+            break;
+        default:
+            setColor(UI_COLOR_PRIMARY);
+            break;
+        }
+    }
 
     virtual void drawChar(unsigned char chr, uint16_t x, uint16_t y)
     {
@@ -97,7 +127,7 @@ protected:
             return;
         }
 
-        setColor(UI_COLOR_HEADER);
+        setColor(COLOR_LIGHT);
         uint8_t level = getLevel(val);
         if (level >= 5) {
             drawPixel(x + 4, y);
@@ -139,16 +169,16 @@ protected:
         drawPixel(x + 2, y + 6);
         drawPixel(x + 1, y + 7);
         drawPixel(x + 2, y + 7);
-        setColor(UI_COLOR_FONT);
+        setColor(COLOR_PRIMARY);
     }
 
     void resetColor()
     {
         defaultColor = true;
         if (coloredRow[0] == row || coloredRow[1] == row) {
-            setColor(UI_COLOR_HEADER);
+            setColor(COLOR_LIGHT);
         } else {
-            setColor(UI_COLOR_FONT);
+            setColor(COLOR_PRIMARY);
         }
         charCount = 0;
     }
@@ -181,22 +211,22 @@ public:
                 resetColor();
             } else {
                 if (isColored(row, col)) {
-                    setColor(UI_COLOR_LABEL);
+                    setColor(COLOR_MEDIUM);
                     defaultColor = false;
                 } else if (!defaultColor) {
                     resetColor();
                 }
                 if (*txt == '>') {
-                    setColor(UI_COLOR_PLAY);
+                    setColor(COLOR_PLAY);
                 } else if (*txt == '*') {
-                    setColor(UI_COLOR_STAR);
+                    setColor(COLOR_HILIGHT);
                 } else if (*txt == '+' || *txt == '-') {
-                    setColor(UI_COLOR_SIGN);
+                    setColor(COLOR_DARK);
                 } else if (*txt == ' ' || *txt == '\n') {
                     resetColor();
                 } else if (firstLetter) {
                     if (charCount > 0) {
-                        setColor(UI_COLOR_LABEL);
+                        setColor(COLOR_MEDIUM);
                     }
                     charCount++;
                 }
