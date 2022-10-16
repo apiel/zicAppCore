@@ -8,16 +8,16 @@
 //                              // but should actually be 20*8 to fit console
 
 #define MAX_DISPLAY_TEXT 512
+#define COLORED_SIZE 5
 
 class App_Renderer {
 public:
     char text[MAX_DISPLAY_TEXT] = "";
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
-    uint8_t coloredLabel = 255;
-    uint8_t coloredLabelFrom = 0;
     int8_t coloredRow[2] = { -1, -1 };
     bool firstLetter = false;
+    uint8_t colored[COLORED_SIZE][5] = { { 0, 0, 0, 0, 0 } };
 
     uint8_t startRow = 0;
 
@@ -26,9 +26,10 @@ public:
         firstLetter = false;
         cursorPos = NULL;
         cursorLen = 0;
-        coloredLabel = 255;
-        coloredLabelFrom = 0;
         useColoredRow(-1, -1);
+        for (int i = 0; i < COLORED_SIZE; i++) {
+            colored[i][0] = 0;
+        }
     }
 
     virtual bool ready()
@@ -42,17 +43,31 @@ public:
         cursorLen = len;
     }
 
-    // void useColoredFromTo
-
-    void useColoredLabel(uint8_t pos = 0, uint8_t from = 0)
+    bool isColored(uint8_t row, uint8_t col)
     {
-        coloredLabel = pos;
-        coloredLabelFrom = from;
+        for (int i = 0; i < COLORED_SIZE; i++) {
+            if (colored[i][0] == 1
+                && row >= colored[i][1] && row < colored[i][2]
+                && col >= colored[i][3] && col < colored[i][4]) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    bool isColoredLabel()
+    // TODO could even think about specifying the color rgb or with a color id like primary, secondary, etc
+    void useColor(uint8_t fromRow, uint8_t toRow, uint8_t fromCol, uint8_t toCol)
     {
-        return coloredLabel != 255;
+        for (int i = 0; i < COLORED_SIZE; i++) {
+            if (colored[i][0] == 0) {
+                colored[i][0] = 1;
+                colored[i][1] = fromRow;
+                colored[i][2] = toRow;
+                colored[i][3] = fromCol;
+                colored[i][4] = toCol;
+                break;
+            }
+        }
     }
 
     void useColoredRow()

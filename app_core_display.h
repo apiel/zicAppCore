@@ -33,6 +33,9 @@ protected:
     uint16_t xScreen = 0;
     uint16_t yScreen = 0;
     uint8_t charCount = 0;
+    uint8_t row = 0;
+    uint8_t col = 0;
+    bool defaultColor = true;
 
     // Could be boolean and use it to draw char process...
     virtual void drawPixel(int16_t x, int16_t y) = 0;
@@ -139,14 +142,9 @@ protected:
         setColor(UI_COLOR_FONT);
     }
 
-    uint8_t getRow(uint16_t y)
+    void resetColor()
     {
-        return (y / ((FONT_H + LINE_SPACING))) + startRow;
-    }
-
-    void resetColor(uint16_t y)
-    {
-        uint8_t row = getRow(y);
+        defaultColor = true;
         if (coloredRow[0] == row || coloredRow[1] == row) {
             setColor(UI_COLOR_HEADER);
         } else {
@@ -170,18 +168,23 @@ public:
         uint16_t y = yScreen;
         uint16_t orig_x = x;
         const char* txt = text;
-        resetColor(y);
+        row = startRow;
+        col = 0;
+        resetColor();
 
         while (*txt) {
             if (*txt == '\n') {
                 x = orig_x;
                 y += (FONT_H + LINE_SPACING);
-                resetColor(y);
+                col = 0;
+                row++;
+                resetColor();
             } else {
-                if (isColoredLabel()
-                    && x == orig_x + (coloredLabel * FONT_W)
-                    && getRow(y) >= coloredLabelFrom) {
+                if (isColored(row, col)) {
                     setColor(UI_COLOR_LABEL);
+                    defaultColor = false;
+                } else if (!defaultColor) {
+                    resetColor();
                 }
                 if (*txt == '>') {
                     setColor(UI_COLOR_PLAY);
@@ -190,7 +193,7 @@ public:
                 } else if (*txt == '+' || *txt == '-') {
                     setColor(UI_COLOR_SIGN);
                 } else if (*txt == ' ' || *txt == '\n') {
-                    resetColor(y);
+                    resetColor();
                 } else if (firstLetter) {
                     if (charCount > 0) {
                         setColor(UI_COLOR_LABEL);
@@ -209,6 +212,7 @@ public:
                     drawChar(*txt, x, y);
                 }
                 x += FONT_W;
+                col++;
             }
             txt++;
         }
