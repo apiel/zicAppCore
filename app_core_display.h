@@ -147,7 +147,7 @@ protected:
     void resetColor(uint16_t y)
     {
         uint8_t row = getRow(y);
-        if (coloredHeader[0] == row || coloredHeader[1] == row) {
+        if (coloredRow[0] == row || coloredRow[1] == row) {
             setColor(UI_COLOR_HEADER);
         } else {
             setColor(UI_COLOR_FONT);
