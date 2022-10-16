@@ -27,7 +27,7 @@ public:
     uint8_t cursorLen = 0;
     int8_t coloredRow[2] = { -1, -1 };
     bool firstLetter = false;
-    uint8_t colored[COLORED_SIZE][5] = { { 0, 0, 0, 0, 0 } };
+    uint8_t colored[COLORED_SIZE][6] = { { 0, 0, 0, 0, 0, 0 } };
 
     uint8_t startRow = 0;
 
@@ -55,18 +55,22 @@ public:
 
     bool isColored(uint8_t row, uint8_t col)
     {
+        return getColored(row, col) != 255;
+    }
+
+    uint8_t getColored(uint8_t row, uint8_t col)
+    {
         for (int i = 0; i < COLORED_SIZE; i++) {
             if (colored[i][0] == 1
                 && row >= colored[i][1] && row < colored[i][2]
                 && col >= colored[i][3] && col < colored[i][4]) {
-                return true;
+                return colored[i][5];
             }
         }
-        return false;
+        return 255;
     }
 
-    // TODO could even think about specifying the color rgb or with a color id like primary, secondary, etc
-    void useColor(uint8_t fromRow, uint8_t toRow, uint8_t fromCol, uint8_t toCol)
+    void useColor(uint8_t fromRow, uint8_t toRow, uint8_t fromCol, uint8_t toCol, uint8_t color = COLOR_MEDIUM)
     {
         for (int i = 0; i < COLORED_SIZE; i++) {
             if (colored[i][0] == 0) {
@@ -75,6 +79,7 @@ public:
                 colored[i][2] = toRow;
                 colored[i][3] = fromCol;
                 colored[i][4] = toCol;
+                colored[i][5] = color;
                 break;
             }
         }

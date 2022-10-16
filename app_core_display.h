@@ -211,8 +211,10 @@ public:
                 resetColor();
             } else {
                 if (isColored(row, col)) {
-                    setColor(COLOR_MEDIUM);
-                    defaultColor = false;
+                    if (defaultColor) {
+                        setColor(getColored(row, col));
+                        defaultColor = false;
+                    }
                 } else if (!defaultColor) {
                     resetColor();
                 }
