@@ -25,8 +25,10 @@
 #define UI_COLOR_PLAY 122, 255, 0
 #define UI_COLOR_HILIGHT 255, 255, 0
 
+// #define UI_COLOR_EQUAL 255, 0, 128
+// #define UI_COLOR_EQUAL 255, 0, 255
+#define UI_COLOR_EQUAL 0, 255, 255
 #define UI_COLOR_CURSOR 0, 128, 255
-
 
 class App_Display : public App_Renderer {
 protected:
@@ -36,6 +38,7 @@ protected:
     uint8_t row = 0;
     uint8_t col = 0;
     bool defaultColor = true;
+    bool oneLetterOnly = false;
 
     // Could be boolean and use it to draw char process...
     virtual void drawPixel(int16_t x, int16_t y) = 0;
@@ -224,11 +227,20 @@ public:
                     setColor(COLOR_HILIGHT);
                 } else if (*txt == '+' || *txt == '-') {
                     setColor(COLOR_DARK);
+                } else if (*txt == '=') {
+                    charCount++;
+                    setColor(UI_COLOR_EQUAL);
+                    oneLetterOnly = true;
                 } else if (*txt == ' ' || *txt == '\n') {
                     resetColor();
                 } else if (firstLetter) {
                     if (charCount > 0) {
                         setColor(COLOR_MEDIUM);
+                    }
+                    charCount++;
+                } else if (oneLetterOnly) {
+                    if (charCount > 0) {
+                        resetColor();
                     }
                     charCount++;
                 }
