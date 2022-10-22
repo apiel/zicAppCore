@@ -29,20 +29,6 @@ public:
     {
         return false;
     }
-
-    int8_t getDirection(UiKeys* keys)
-    {
-        if (keys->Right) {
-            return 1;
-        } else if (keys->Up) {
-            return 10;
-        } else if (keys->Left) {
-            return -1;
-        } else if (keys->Down) {
-            return -10;
-        }
-        return 0;
-    }
 };
 
 class App_View_TableFieldCursor : public App_View_TableField {

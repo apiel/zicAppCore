@@ -18,13 +18,33 @@ enum {
     UI_KEY_COUNT
 };
 
-typedef struct {
+class UiKeys {
+public:
     bool Up = false;
     bool Down = false;
     bool Right = false;
     bool Left = false;
     bool Edit = false;
     bool Menu = false;
-} UiKeys;
+
+    int8_t getDirection()
+    {
+        if (Right) {
+            return 1;
+        } else if (Up) {
+            return 10;
+        } else if (Left) {
+            return -1;
+        } else if (Down) {
+            return -10;
+        }
+        return 0;
+    }
+
+    float getDirection(float step)
+    {
+        return getDirection() * step;
+    }
+};
 
 #endif
