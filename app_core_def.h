@@ -15,6 +15,7 @@ enum {
     UI_KEY_RIGHT,
     UI_KEY_EDIT,
     UI_KEY_MENU,
+    UI_KEY_ACTION,
     UI_KEY_COUNT
 };
 
@@ -26,6 +27,7 @@ public:
     bool Left = false;
     bool Edit = false;
     bool Menu = false;
+    bool Action = false;
 
     int8_t getDirection()
     {
