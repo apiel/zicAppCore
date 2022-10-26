@@ -26,6 +26,7 @@ public:
 
     virtual void* open(const char* filename, const char* mode)
     {
+        close();
         file = SDL_RWFromFile(filename, mode);
         return file;
     }
