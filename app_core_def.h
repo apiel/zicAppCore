@@ -47,6 +47,16 @@ public:
     {
         return getDirection() * step;
     }
+
+    int8_t getOneDirection()
+    {
+        if (Right && Up) {
+            return 1;
+        } else if (Left && Down) {
+            return -1;
+        }
+        return 0;
+    }
 };
 
 #endif
