@@ -5,11 +5,20 @@
 
 #include <stdio.h>
 
+#ifndef SAMPLE_RATE
 #define SAMPLE_RATE 44100
+#endif
+
+#ifndef CHANNELS
 // #define CHANNELS 1
 #define CHANNELS 2 // to be fixed
+#endif
+
 #define APP_AUDIO_FORMAT AUDIO_S16LSB
+
+#ifndef APP_AUDIO_CHUNK
 #define APP_AUDIO_CHUNK 4096
+#endif
 
 // THIS MUST BE ON TOP
 // this include must be before initilizing zic lib, to be sure to override zic_file.h!
