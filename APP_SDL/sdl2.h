@@ -14,7 +14,9 @@
 #define CHANNELS 2 // to be fixed
 #endif
 
+#ifndef APP_AUDIO_FORMAT
 #define APP_AUDIO_FORMAT AUDIO_S16LSB
+#endif
 
 #ifndef APP_AUDIO_CHUNK
 #define APP_AUDIO_CHUNK 4096
