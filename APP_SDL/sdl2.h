@@ -9,9 +9,8 @@
 #define SAMPLE_RATE 44100
 #endif
 
-#ifndef CHANNELS
-// #define CHANNELS 1
-#define CHANNELS 2 // to be fixed
+#ifndef APP_CHANNELS
+#define APP_CHANNELS 2
 #endif
 
 #ifndef APP_AUDIO_FORMAT
@@ -198,7 +197,7 @@ SDL_AudioDeviceID initAudio(SDL_AudioCallback callback)
     SDL_zero(spec);
     spec.freq = SAMPLE_RATE;
     spec.format = APP_AUDIO_FORMAT;
-    spec.channels = CHANNELS;
+    spec.channels = APP_CHANNELS;
     spec.samples = APP_AUDIO_CHUNK;
     spec.callback = callback;
     spec.userdata = NULL;
