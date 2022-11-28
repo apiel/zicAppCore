@@ -24,6 +24,8 @@
 #define APP_AUDIO_CHUNK 1024
 #endif
 
+#define APP_TICK_DIVIDER 1.0f / (256.0f * APP_CHANNELS)
+
 // THIS MUST BE ON TOP
 // this include must be before initilizing zic lib, to be sure to override zic_file.h!
 #include "zic_file_sdl.h"
