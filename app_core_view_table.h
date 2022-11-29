@@ -181,7 +181,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* renderer)
+    virtual uint8_t update(UiKeys* keys, App_Renderer* renderer)
     {
         uint8_t res = VIEW_CHANGED;
         if (keys->Edit) {
