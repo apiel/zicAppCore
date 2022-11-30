@@ -8,8 +8,19 @@
 #include <app_duk_extra.h>
 
 class App_View_JS : public App_View {
-
 public:
+duk_context* ctx;
+
+    App_View_JS()
+    {
+        ctx = duk_create_heap_default();
+    }
+
+    ~App_View_JS()
+    {
+        duk_destroy_heap(ctx);
+    }
+
     virtual void initDisplay(App_Renderer* renderer)
     {
         strcpy(renderer->text, "");
