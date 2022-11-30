@@ -114,13 +114,8 @@ static void duk_register_fn_log(duk_context* ctx)
 
 duk_int_t duk_eval_file_extra(duk_context* ctx, const char* path)
 {
-    duk_int_t rc = duk_compile_file(ctx, path);
-    if (rc != 0) {
-        return rc;
-    }
     duk_register_fn_log(ctx);
-    duk_push_global_object(ctx); /* 'this' binding */
-    return duk_pcall_method(ctx, 0);
+    return duk_eval_file(ctx, path);
 }
 
 #endif
