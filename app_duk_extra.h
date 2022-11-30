@@ -1,10 +1,12 @@
 #ifndef APP_DUK_EXTRA_H_
 #define APP_DUK_EXTRA_H_
 
+#include "./app_core_def.h"
+
 #include <duktape.h>
 #include <stdio.h>
 
-#define DUK_STRING_PUSH_SAFE              (1 << 0)    /* no error if file does not exist */
+#define DUK_STRING_PUSH_SAFE (1 << 0) /* no error if file does not exist */
 
 /*
  *  duk_dump_context_{stdout,stderr}()
@@ -28,6 +30,7 @@ void duk_dump_context_stderr(duk_context* ctx)
  *  duk_push_string_file() and duk_push_string_file_raw()
  */
 
+// TODO use SDL file stuff?
 const char* duk_push_string_file_raw(duk_context* ctx, const char* path, duk_uint_t flags)
 {
     FILE* f = NULL;
@@ -72,74 +75,26 @@ fail:
     return NULL;
 }
 
-/*
- *  duk_eval_file(), duk_compile_file(), and their variants
- */
-
-void duk_eval_file(duk_context* ctx, const char* path)
-{
-    duk_push_string_file_raw(ctx, path, 0);
-    duk_push_string(ctx, path);
-    duk_compile(ctx, DUK_COMPILE_EVAL);
-    duk_push_global_object(ctx); /* 'this' binding */
-    duk_call_method(ctx, 0);
-}
-
-void duk_eval_file_noresult(duk_context* ctx, const char* path)
-{
-    duk_eval_file(ctx, path);
-    duk_pop(ctx);
-}
-
-duk_int_t duk_peval_file(duk_context* ctx, const char* path)
+duk_int_t duk_compile_file(duk_context* ctx, const char* path)
 {
     duk_int_t rc;
-
     duk_push_string_file_raw(ctx, path, DUK_STRING_PUSH_SAFE);
     duk_push_string(ctx, path);
-    rc = duk_pcompile(ctx, DUK_COMPILE_EVAL);
+
+    if ((rc = duk_pcompile(ctx, DUK_COMPILE_EVAL)) != 0) {
+        APP_LOG("compile failed: %s\n", duk_safe_to_string(ctx, -1));
+    }
+    return rc;
+}
+
+duk_int_t duk_eval_file(duk_context* ctx, const char* path)
+{
+    duk_int_t rc = duk_compile_file(ctx, path);
     if (rc != 0) {
         return rc;
     }
     duk_push_global_object(ctx); /* 'this' binding */
-    rc = duk_pcall_method(ctx, 0);
-    return rc;
-}
-
-duk_int_t duk_peval_file_noresult(duk_context* ctx, const char* path)
-{
-    duk_int_t rc;
-
-    rc = duk_peval_file(ctx, path);
-    duk_pop(ctx);
-    return rc;
-}
-
-void duk_compile_file(duk_context* ctx, duk_uint_t flags, const char* path)
-{
-    duk_push_string_file_raw(ctx, path, 0);
-    duk_push_string(ctx, path);
-    duk_compile(ctx, flags);
-}
-
-duk_int_t duk_pcompile_file(duk_context* ctx, duk_uint_t flags, const char* path)
-{
-    duk_int_t rc;
-
-    duk_push_string_file_raw(ctx, path, DUK_STRING_PUSH_SAFE);
-    duk_push_string(ctx, path);
-    rc = duk_pcompile(ctx, flags);
-    return rc;
-}
-
-/*
- *  duk_to_defaultvalue()
- */
-
-void duk_to_defaultvalue(duk_context* ctx, duk_idx_t idx, duk_int_t hint)
-{
-    duk_require_type_mask(ctx, idx, DUK_TYPE_MASK_OBJECT | DUK_TYPE_MASK_BUFFER | DUK_TYPE_MASK_LIGHTFUNC);
-    duk_to_primitive(ctx, idx, hint);
+    return duk_pcall_method(ctx, 0);
 }
 
 #endif

@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifndef APP_LOG
+#define APP_LOG printf
+#endif
+
 enum {
     VIEW_NONE,
     VIEW_CHANGED,
