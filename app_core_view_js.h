@@ -30,6 +30,7 @@ public:
         strcpy(renderer->text, "");
         if (duk_get_global_string(ctx, "renderer")) {
             duk_call(ctx, 0);
+            duk_pop(ctx);
         }
     }
 
