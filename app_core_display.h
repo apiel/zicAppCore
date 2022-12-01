@@ -19,9 +19,9 @@
 #define UI_COLOR_BG 0, 0, 0
 #define UI_COLOR_PRIMARY 0xFF, 0xFF, 0xFF
 #define UI_COLOR_SECONDARY 0xFF, 0xFF, 0xFF
-#define UI_COLOR_LIGHT 100, 100, 100
-#define UI_COLOR_MEDIUM 150, 150, 150
-#define UI_COLOR_DARK 190, 190, 190
+#define UI_COLOR_DARK 100, 100, 100
+#define UI_COLOR_MEDIUM 130, 130, 130
+#define UI_COLOR_LIGHT 210, 210, 210
 #define UI_COLOR_PLAY 122, 255, 0
 #define UI_COLOR_HILIGHT 255, 255, 0
 
@@ -34,11 +34,9 @@ class App_Display : public App_Renderer {
 protected:
     uint16_t xScreen = 0;
     uint16_t yScreen = 0;
-    uint8_t charCount = 0;
     uint8_t row = 0;
     uint8_t col = 0;
-    bool defaultColor = true;
-    bool oneLetterOnly = false;
+    uint8_t currentColor = 0;
 
     // Could be boolean and use it to draw char process...
     virtual void drawPixel(int16_t x, int16_t y) = 0;
@@ -47,6 +45,10 @@ protected:
 
     void setColor(uint8_t color)
     {
+        if (color == currentColor) {
+            return;
+        }
+        currentColor = color;
         switch (color) {
         case COLOR_PRIMARY:
             setColor(UI_COLOR_PRIMARY);
@@ -130,7 +132,6 @@ protected:
             return;
         }
 
-        setColor(COLOR_LIGHT);
         uint8_t level = getLevel(val);
         if (level >= 5) {
             drawPixel(x + 4, y);
@@ -172,23 +173,15 @@ protected:
         drawPixel(x + 2, y + 6);
         drawPixel(x + 1, y + 7);
         drawPixel(x + 2, y + 7);
-        setColor(COLOR_PRIMARY);
-    }
-
-    void resetColor()
-    {
-        defaultColor = true;
-        setColor(COLOR_PRIMARY);
-        charCount = 0;
     }
 
 public:
     virtual void clearScreen() = 0;
 
-    void reset() override
+    void reset(uint8_t color = 0) override
     {
         clearScreen();
-        App_Renderer::reset();
+        App_Renderer::reset(color);
     }
 
     virtual void drawText()
@@ -199,7 +192,6 @@ public:
         const char* txt = text;
         row = startRow;
         col = 0;
-        resetColor();
 
         while (*txt) {
             if (*txt == '\n') {
@@ -207,40 +199,8 @@ public:
                 y += (FONT_H + LINE_SPACING);
                 col = 0;
                 row++;
-                resetColor();
             } else {
-                if (isColored(row, col)) {
-                    if (defaultColor) {
-                        setColor(getColored(row, col));
-                        defaultColor = false;
-                    }
-                } else if (!defaultColor) {
-                    resetColor();
-                }
-                if (*txt == '>') {
-                    setColor(COLOR_PLAY);
-                } else if (*txt == '*') {
-                    setColor(COLOR_HILIGHT);
-                } else if (*txt == '+' || *txt == '-') {
-                    setColor(COLOR_DARK);
-                } else if (*txt == '=') {
-                    charCount++;
-                    setColor(UI_COLOR_EQUAL);
-                    oneLetterOnly = true;
-                } else if (*txt == ' ' || *txt == '\n') {
-                    resetColor();
-                } else if (firstLetter) {
-                    if (charCount > 0) {
-                        setColor(COLOR_MEDIUM);
-                    }
-                    charCount++;
-                } else if (oneLetterOnly) {
-                    if (charCount > 0) {
-                        resetColor();
-                    }
-                    charCount++;
-                }
-
+                setColor(getColored(row, col));
                 if (cursorLen && txt >= cursorPos && txt < cursorPos + cursorLen) {
                     drawCursor(x, y);
                 }

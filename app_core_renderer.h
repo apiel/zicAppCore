@@ -5,9 +5,9 @@
 #include <stdint.h>
 
 #define MAX_DISPLAY_COL 30
-#define MAX_DISPLAY_ROW 8
+#define MAX_DISPLAY_ROW 10
 
-// #define MAX_DISPLAY_TEXT 30*8 + 8 // 30*8 + 8\n
+// #define MAX_DISPLAY_TEXT MAX_DISPLAY_COL*(MAX_DISPLAY_ROW + 1) // +1 for \n
 // However, special char take more place, so let's keep it large
 #define MAX_DISPLAY_TEXT 512
 #define COLORED_SIZE 5
@@ -27,24 +27,15 @@ public:
     char text[MAX_DISPLAY_TEXT] = "";
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
-    bool firstLetter = false;
     uint8_t colored[MAX_DISPLAY_ROW][MAX_DISPLAY_COL];
 
     uint8_t startRow = 0;
 
-    virtual void reset()
+    virtual void reset(uint8_t color = 0)
     {
-        firstLetter = false;
         cursorPos = NULL;
         cursorLen = 0;
-        // for (int i = 0; i < COLORED_SIZE; i++) {
-        //     colored[i][0] = 0;
-        // }
-        for (int i = 0; i < MAX_DISPLAY_ROW; i++) {
-            for (int j = 0; j < MAX_DISPLAY_COL; j++) {
-                colored[i][j] = 0;
-            }
-        }
+        setDefaultColor(color);
     }
 
     virtual bool ready()
@@ -58,22 +49,33 @@ public:
         cursorLen = len;
     }
 
-    bool isColored(uint8_t row, uint8_t col)
-    {
-        return getColored(row, col) != 255;
-    }
-
     uint8_t getColored(uint8_t row, uint8_t col)
     {
         return colored[row][col];
     }
 
-    void useColor(uint8_t row, uint8_t col, uint8_t color = COLOR_MEDIUM)
+    void setDefaultColor(uint8_t color)
     {
-        colored[row][col] = color;
+        for (int i = 0; i < MAX_DISPLAY_ROW; i++) {
+            for (int j = 0; j < MAX_DISPLAY_COL; j++) {
+                colored[i][j] = color;
+            }
+        }
     }
 
-    void useColor(uint8_t fromRow, uint8_t tillRow, uint8_t fromCol, uint8_t tillCol, uint8_t color = COLOR_MEDIUM)
+    void useColor(uint8_t row, uint8_t col, uint8_t color)
+    {
+        colored[row % MAX_DISPLAY_ROW][col % MAX_DISPLAY_COL] = color;
+    }
+
+    void useColor(uint8_t row, uint8_t col, uint8_t len, uint8_t color)
+    {
+        for (int i = 0; i < len; i++) {
+            colored[row % MAX_DISPLAY_ROW][(col + i) % MAX_DISPLAY_COL] = color;
+        }
+    }
+
+    void useColor(uint8_t fromRow, uint8_t tillRow, uint8_t fromCol, uint8_t tillCol, uint8_t color)
     {
         for (int i = fromRow; i < MAX_DISPLAY_ROW && i < tillRow; i++) {
             for (int j = 0; j < MAX_DISPLAY_COL && j < tillCol; j++) {
@@ -84,12 +86,7 @@ public:
 
     void useColoredRow(int8_t row = 0)
     {
-        useColor(row, row + 1, 0, 255, COLOR_LIGHT);
-    }
-
-    void useFirstLetterHilighted()
-    {
-        firstLetter = true;
+        useColor(row, row + 1, 0, 255, COLOR_DARK);
     }
 };
 
