@@ -25,8 +25,8 @@ public:
     char text[MAX_DISPLAY_TEXT] = "";
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
-    int8_t coloredRow[2] = { -1, -1 };
     bool firstLetter = false;
+    // Instead of this, we could have a color for each letters colored[512]
     uint8_t colored[COLORED_SIZE][6] = { { 0, 0, 0, 0, 0, 0 } };
 
     uint8_t startRow = 0;
@@ -36,7 +36,6 @@ public:
         firstLetter = false;
         cursorPos = NULL;
         cursorLen = 0;
-        useColoredRow(-1, -1);
         for (int i = 0; i < COLORED_SIZE; i++) {
             colored[i][0] = 0;
         }
@@ -85,20 +84,9 @@ public:
         }
     }
 
-    void useColoredRow()
+    void useColoredRow(int8_t row = 0)
     {
-        useColoredRow(0, -1);
-    }
-
-    void useColoredRow(int8_t row)
-    {
-        useColoredRow(row, -1);
-    }
-
-    void useColoredRow(int8_t row1, int8_t row2)
-    {
-        coloredRow[0] = row1;
-        coloredRow[1] = row2;
+        useColor(row, row + 1, 0, 255, COLOR_LIGHT);
     }
 
     void useFirstLetterHilighted()

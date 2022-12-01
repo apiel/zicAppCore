@@ -178,11 +178,7 @@ protected:
     void resetColor()
     {
         defaultColor = true;
-        if (coloredRow[0] == row || coloredRow[1] == row) {
-            setColor(COLOR_LIGHT);
-        } else {
-            setColor(COLOR_PRIMARY);
-        }
+        setColor(COLOR_PRIMARY);
         charCount = 0;
     }
 
