@@ -20,6 +20,7 @@ enum {
     COLOR_DARK,
     COLOR_PLAY,
     COLOR_HILIGHT,
+    COLOR_MARKER,
 };
 
 class App_Renderer {

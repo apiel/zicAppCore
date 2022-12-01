@@ -24,6 +24,7 @@
 #define UI_COLOR_LIGHT 210, 210, 210
 #define UI_COLOR_PLAY 122, 255, 0
 #define UI_COLOR_HILIGHT 255, 255, 0
+#define UI_COLOR_MARKER 60, 95, 155
 
 // #define UI_COLOR_EQUAL 255, 0, 128
 // #define UI_COLOR_EQUAL 255, 0, 255
@@ -70,6 +71,9 @@ protected:
             break;
         case COLOR_HILIGHT:
             setColor(UI_COLOR_HILIGHT);
+            break;
+        case COLOR_MARKER:
+            setColor(UI_COLOR_MARKER);
             break;
         default:
             setColor(UI_COLOR_PRIMARY);
