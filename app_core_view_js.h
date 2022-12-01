@@ -28,14 +28,34 @@ public:
     {
         App_View_JS::display = renderer;
         strcpy(renderer->text, "");
-        duk_get_global_string(ctx, "renderer");
-        duk_call(ctx, 0);
+        if (duk_get_global_string(ctx, "renderer")) {
+            duk_call(ctx, 0);
+        }
     }
 
     virtual uint8_t update(UiKeys* keys, App_Renderer* renderer)
     {
         App_View_JS::display = renderer;
         uint8_t res = VIEW_CHANGED;
+
+        if (duk_get_global_string(ctx, "update")) {
+            duk_idx_t obj_idx = duk_push_object(ctx);
+            duk_push_boolean(ctx, keys->Up);
+            duk_put_prop_string(ctx, obj_idx, "Up");
+            duk_push_boolean(ctx, keys->Down);
+            duk_put_prop_string(ctx, obj_idx, "Down");
+            duk_push_boolean(ctx, keys->Right);
+            duk_put_prop_string(ctx, obj_idx, "Right");
+            duk_push_boolean(ctx, keys->Left);
+            duk_put_prop_string(ctx, obj_idx, "Left");
+            duk_push_boolean(ctx, keys->Menu);
+            duk_put_prop_string(ctx, obj_idx, "Menu");
+            duk_push_boolean(ctx, keys->Action);
+            duk_put_prop_string(ctx, obj_idx, "Action");
+            duk_call(ctx, 1);
+
+            res = (int)duk_get_int(ctx, -1);
+        }
 
         if (res != VIEW_NONE) {
             render(renderer);
@@ -45,10 +65,7 @@ public:
 
     static duk_ret_t duk_render(duk_context* ctx)
     {
-        duk_push_string(ctx, " ");
-        duk_insert(ctx, 0);
-        duk_join(ctx, duk_get_top(ctx) - 1);
-        strcpy(App_View_JS::display->text, duk_safe_to_string(ctx, -1));
+        strcpy(App_View_JS::display->text, duk_safe_to_string(ctx, 0));
         return 0;
     }
 };
