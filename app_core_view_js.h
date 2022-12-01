@@ -52,9 +52,10 @@ public:
             duk_put_prop_string(ctx, obj_idx, "Menu");
             duk_push_boolean(ctx, keys->Action);
             duk_put_prop_string(ctx, obj_idx, "Action");
+            // TODO might want to add functions to obj
             duk_call(ctx, 1);
-
             res = (int)duk_get_int(ctx, -1);
+            duk_pop(ctx);
         }
 
         if (res != VIEW_NONE) {
