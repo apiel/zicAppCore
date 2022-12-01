@@ -4,9 +4,11 @@
 #include <cstring>
 #include <stdint.h>
 
-// #define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
-//                              // but should actually be 20*8 to fit console
+#define MAX_DISPLAY_COL 30
+#define MAX_DISPLAY_ROW 8
 
+// #define MAX_DISPLAY_TEXT 30*8 + 8 // 30*8 + 8\n
+// However, special char take more place, so let's keep it large
 #define MAX_DISPLAY_TEXT 512
 #define COLORED_SIZE 5
 
@@ -26,8 +28,7 @@ public:
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
     bool firstLetter = false;
-    // Instead of this, we could have a color for each letters colored[512]
-    uint8_t colored[COLORED_SIZE][6] = { { 0, 0, 0, 0, 0, 0 } };
+    uint8_t colored[MAX_DISPLAY_ROW][MAX_DISPLAY_COL];
 
     uint8_t startRow = 0;
 
@@ -36,8 +37,13 @@ public:
         firstLetter = false;
         cursorPos = NULL;
         cursorLen = 0;
-        for (int i = 0; i < COLORED_SIZE; i++) {
-            colored[i][0] = 0;
+        // for (int i = 0; i < COLORED_SIZE; i++) {
+        //     colored[i][0] = 0;
+        // }
+        for (int i = 0; i < MAX_DISPLAY_ROW; i++) {
+            for (int j = 0; j < MAX_DISPLAY_COL; j++) {
+                colored[i][j] = 0;
+            }
         }
     }
 
@@ -59,27 +65,19 @@ public:
 
     uint8_t getColored(uint8_t row, uint8_t col)
     {
-        for (int i = 0; i < COLORED_SIZE; i++) {
-            if (colored[i][0] == 1
-                && row >= colored[i][1] && row < colored[i][2]
-                && col >= colored[i][3] && col < colored[i][4]) {
-                return colored[i][5];
-            }
-        }
-        return 255;
+        return colored[row][col];
     }
 
-    void useColor(uint8_t fromRow, uint8_t toRow, uint8_t fromCol, uint8_t toCol, uint8_t color = COLOR_MEDIUM)
+    void useColor(uint8_t row, uint8_t col, uint8_t color = COLOR_MEDIUM)
     {
-        for (int i = 0; i < COLORED_SIZE; i++) {
-            if (colored[i][0] == 0) {
-                colored[i][0] = 1;
-                colored[i][1] = fromRow;
-                colored[i][2] = toRow;
-                colored[i][3] = fromCol;
-                colored[i][4] = toCol;
-                colored[i][5] = color;
-                break;
+        colored[row][col] = color;
+    }
+
+    void useColor(uint8_t fromRow, uint8_t tillRow, uint8_t fromCol, uint8_t tillCol, uint8_t color = COLOR_MEDIUM)
+    {
+        for (int i = fromRow; i < MAX_DISPLAY_ROW && i < tillRow; i++) {
+            for (int j = 0; j < MAX_DISPLAY_COL && j < tillCol; j++) {
+                useColor(i, j, color);
             }
         }
     }
