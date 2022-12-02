@@ -15,8 +15,27 @@ public:
     App_View_JS()
     {
         ctx = duk_create_heap_default();
-        duk_push_c_function(ctx, App_View_JS::duk_render, DUK_VARARGS);
+        duk_push_c_function(ctx, App_View_JS::duk_render, 1);
         duk_put_global_string(ctx, "render");
+        duk_push_c_function(ctx, App_View_JS::duk_useColor, 4);
+        duk_put_global_string(ctx, "useColor");
+
+        duk_push_int(ctx, COLOR_PRIMARY);
+        duk_put_global_string(ctx, "COLOR_PRIMARY");
+        duk_push_int(ctx, COLOR_SECONDARY);
+        duk_put_global_string(ctx, "COLOR_SECONDARY");
+        duk_push_int(ctx, COLOR_LIGHT);
+        duk_put_global_string(ctx, "COLOR_LIGHT");
+        duk_push_int(ctx, COLOR_MEDIUM);
+        duk_put_global_string(ctx, "COLOR_MEDIUM");
+        duk_push_int(ctx, COLOR_DARK);
+        duk_put_global_string(ctx, "COLOR_DARK");
+        duk_push_int(ctx, COLOR_HILIGHT);
+        duk_put_global_string(ctx, "COLOR_HILIGHT");
+        duk_push_int(ctx, COLOR_PLAY);
+        duk_put_global_string(ctx, "COLOR_PLAY");
+        duk_push_int(ctx, COLOR_MARKER);
+        duk_put_global_string(ctx, "COLOR_MARKER");
     }
 
     ~App_View_JS()
@@ -68,6 +87,21 @@ public:
     static duk_ret_t duk_render(duk_context* ctx)
     {
         strcpy(App_View_JS::display->text, duk_safe_to_string(ctx, 0));
+        return 0;
+    }
+
+    static duk_ret_t duk_useColor(duk_context* ctx)
+    {
+        uint8_t row = duk_get_int(ctx, 0);
+        uint8_t col = duk_get_int(ctx, 1);
+        uint8_t color = duk_get_int(ctx, 2);
+        if (duk_is_undefined(ctx, 3)) {
+            App_View_JS::display->useColor(row, col, color);
+        } else {
+            uint8_t len = duk_get_int(ctx, 3);
+            App_View_JS::display->useColor(row, col, color, len);
+        }
+
         return 0;
     }
 };

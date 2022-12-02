@@ -69,7 +69,7 @@ public:
         colored[row % MAX_DISPLAY_ROW][col % MAX_DISPLAY_COL] = color;
     }
 
-    void useColor(uint8_t row, uint8_t col, uint8_t len, uint8_t color)
+    void useColor(uint8_t row, uint8_t col, uint8_t color, uint8_t len)
     {
         for (int i = 0; i < len; i++) {
             colored[row % MAX_DISPLAY_ROW][(col + i) % MAX_DISPLAY_COL] = color;
