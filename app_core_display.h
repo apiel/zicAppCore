@@ -75,6 +75,9 @@ protected:
         case COLOR_MARKER:
             setColor(UI_COLOR_MARKER);
             break;
+        case COLOR_CURSOR:
+            setColor(UI_COLOR_CURSOR);
+            break;
         default:
             setColor(UI_COLOR_PRIMARY);
             break;

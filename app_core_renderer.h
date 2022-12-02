@@ -22,6 +22,7 @@ enum {
     COLOR_PLAY,
     COLOR_HILIGHT,
     COLOR_MARKER,
+    COLOR_CURSOR,
 };
 
 class App_Renderer {
