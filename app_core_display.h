@@ -204,16 +204,19 @@ public:
                 col = 0;
                 row++;
             } else {
-                setColor(getColored(row, col));
                 if (cursorLen && txt >= cursorPos && txt < cursorPos + cursorLen) {
                     drawCursor(x, y);
                 }
 
-                if (*txt == -30) {
-                    drawSpecialChar(*(uint16_t*)(txt + 1), x, y);
-                    txt += 2;
-                } else {
-                    drawChar(*txt, x, y);
+                uint8_t color = getColored(row, col);
+                if (color != COLOR_HIDE) {
+                    setColor(color);
+                    if (*txt == -30) {
+                        drawSpecialChar(*(uint16_t*)(txt + 1), x, y);
+                        txt += 2;
+                    } else {
+                        drawChar(*txt, x, y);
+                    }
                 }
                 x += FONT_W;
                 col++;

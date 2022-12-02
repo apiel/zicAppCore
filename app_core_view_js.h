@@ -24,6 +24,8 @@ public:
         duk_put_global_string(ctx, "COLOR_PRIMARY");
         duk_push_int(ctx, COLOR_SECONDARY);
         duk_put_global_string(ctx, "COLOR_SECONDARY");
+        duk_push_int(ctx, COLOR_HIDE);
+        duk_put_global_string(ctx, "COLOR_HIDE");
         duk_push_int(ctx, COLOR_LIGHT);
         duk_put_global_string(ctx, "COLOR_LIGHT");
         duk_push_int(ctx, COLOR_MEDIUM);
