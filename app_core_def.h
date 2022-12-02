@@ -10,6 +10,7 @@
 enum {
     VIEW_NONE,
     VIEW_CHANGED,
+    VIEW_STATE_CHANGED,
 };
 
 enum {
