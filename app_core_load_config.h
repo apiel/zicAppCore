@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 
-#include "./app_core_util.h"
 #include "./app_core_def.h"
+#include "./app_core_util.h"
 
 #define APP_CONFIG_SIZE 128
 
@@ -49,14 +49,17 @@ public:
                     break;
                 }
             }
-
-            for (; i < APP_CONFIG_SIZE; i++) {
-                config[i][0] = 255;
-                config[i][1] = 255;
-                config[i][2] = 255;
-            }
-
+            resetConfig(i);
             file.close();
+        }
+    }
+
+    void resetConfig(uint8_t i = 0)
+    {
+        for (; i < APP_CONFIG_SIZE; i++) {
+            config[i][0] = 255;
+            config[i][1] = 255;
+            config[i][2] = 255;
         }
     }
 
