@@ -87,9 +87,9 @@ public:
         }
     }
 
-    void useColoredRow(int8_t row = 0)
+    void useColoredRow(int8_t row = 0, uint8_t color = COLOR_DARK)
     {
-        useColor(row, row + 1, 0, 255, COLOR_DARK);
+        useColor(row, row + 1, 0, 255, color);
     }
 };
 

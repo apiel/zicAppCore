@@ -165,7 +165,7 @@ public:
         strcat(renderer->text, "\n");
     }
 
-    void render(App_Renderer* renderer)
+    virtual void render(App_Renderer* renderer)
     {
         initDisplay(renderer);
         for (uint8_t row = renderer->startRow; row < lastRow && row - renderer->startRow < TABLE_VISIBLE_ROWS; row++) {
