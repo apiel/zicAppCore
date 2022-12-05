@@ -29,6 +29,10 @@ public:
     {
         return false;
     }
+
+    virtual void selected(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+    }
 };
 
 class App_View_TableFieldCursor : public App_View_TableField {
@@ -41,20 +45,14 @@ public:
     {
     }
 
-    virtual void renderValue(App_Renderer* renderer, uint8_t col) = 0;
-
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
     }
 
-    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
-        if (selectedRow == row && selectedCol == col) {
-            renderer->setCursor(cursorLen);
-        }
-
-        renderValue(renderer, col);
+        renderer->setCursor(cursorLen);
     }
 };
 
@@ -69,7 +67,7 @@ public:
     {
     }
 
-    // virtual void renderValue(App_Renderer* renderer, uint8_t col) = 0;
+    virtual void renderValue(App_Renderer* renderer, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
@@ -81,7 +79,7 @@ public:
         if (col == 0) {
             strcat(renderer->text, label);
         } else {
-            App_View_TableFieldCursor::render(renderer, row, col, selectedRow, selectedCol);
+            renderValue(renderer, col);
         }
     }
 };
@@ -92,7 +90,7 @@ protected:
     uint8_t lastRow;
     const uint8_t COL_COUNT;
     App_View_TableField** fields;
-    bool updating = false;
+    bool editingField = false;
 
     App_View_TableField* getSelectedField()
     {
@@ -174,6 +172,9 @@ public:
                 // here would come if visible col
                 App_View_TableField* field = fields[row * COL_COUNT + col];
                 if (field != NULL) {
+                    if (selectedRow == row && selectedCol == col) {
+                        field->selected(renderer, row, col);
+                    }
                     field->render(renderer, row, col, selectedRow, selectedCol);
                 }
             }
@@ -185,15 +186,15 @@ public:
     {
         uint8_t res = VIEW_CHANGED;
         if (keys->Edit) {
-            if (!updating) {
+            if (!editingField) {
                 getSelectedField()->updateStart(selectedRow, selectedCol);
-                updating = true;
+                editingField = true;
             }
             res = getSelectedField()->update(keys, renderer, selectedRow, selectedCol);
         } else {
-            if (updating) {
+            if (editingField) {
                 getSelectedField()->updateEnd(selectedRow, selectedCol);
-                updating = false;
+                editingField = false;
             }
             if (keys->Up) {
                 selectNextRow(-1);
