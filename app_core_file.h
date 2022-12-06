@@ -28,8 +28,9 @@ int8_t myStrcmp(const char* __s1, const char* __s2)
     return res > 0 ? 1 : -1;
 }
 
-void nextFile(char* filename, const char* folder, const char* current, int8_t direction)
+bool nextFile(char* filename, const char* folder, const char* current, int8_t direction)
 {
+    bool next = false;
     DIR* x = opendir(folder);
     if (x != NULL) {
         struct dirent* directory;
@@ -41,15 +42,15 @@ void nextFile(char* filename, const char* folder, const char* current, int8_t di
             if (myStrcmp(directory->d_name, cur) == direction
                 && (strcmp(filename, cur) == 0 || myStrcmp(directory->d_name, filename) == direction * -1)) {
                 strncpy(filename, directory->d_name, 256);
+                next = true;
             }
         }
         closedir(x);
-    } else {
-        strncpy(filename, "Empty folder", 256);
     }
+    return next;
 }
 
-void firstFile(char* filename, const char* folder)
+bool firstFile(char* filename, const char* folder)
 {
     bool initialized = false;
     DIR* x = opendir(folder);
@@ -64,9 +65,7 @@ void firstFile(char* filename, const char* folder)
         }
         closedir(x);
     }
-    if (!initialized) {
-        strncpy(filename, "Empty folder", 256);
-    }
+    return initialized;
 }
 
 enum {
