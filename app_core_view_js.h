@@ -36,8 +36,6 @@ public:
         duk_put_global_string(ctx, "COLOR_HILIGHT");
         duk_push_int(ctx, COLOR_PLAY);
         duk_put_global_string(ctx, "COLOR_PLAY");
-        duk_push_int(ctx, COLOR_MARKER);
-        duk_put_global_string(ctx, "COLOR_MARKER");
         duk_push_int(ctx, COLOR_CURSOR);
         duk_put_global_string(ctx, "COLOR_CURSOR");
     }

@@ -21,7 +21,6 @@ enum {
     COLOR_DARK,
     COLOR_PLAY,
     COLOR_HILIGHT,
-    COLOR_MARKER,
     COLOR_CURSOR,
 };
 
