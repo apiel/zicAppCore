@@ -24,6 +24,10 @@ public:
     virtual void loadSnapshot()
     {
     }
+
+    virtual void focusView()
+    {
+    }
 };
 
 #endif
