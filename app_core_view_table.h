@@ -104,6 +104,7 @@ protected:
             // FIXME modulo, dont use motulo but comparison?
             selectedRow = (selectedRow + lastRow + direction) % lastRow;
             if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
+                onSelectRow();
                 break;
             }
         } while (selectedRow != start);
@@ -116,9 +117,18 @@ protected:
             // FIXME modulo, dont use motulo but comparison?
             selectedCol = (selectedCol + COL_COUNT + direction) % COL_COUNT;
             if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
+                onSelectCol();
                 break;
             }
         } while (selectedCol != start);
+    }
+
+    virtual void onSelectRow()
+    {
+    }
+
+    virtual void onSelectCol()
+    {
     }
 
 public:
