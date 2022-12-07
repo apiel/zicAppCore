@@ -7,6 +7,8 @@
 #include <app_duk_extra.h>
 #include <duktape.h>
 
+#define APP_VIEW_JS_TOP_ROW 1
+
 class App_View_JS : public App_View {
 public:
     duk_context* ctx;
@@ -45,10 +47,15 @@ public:
         duk_destroy_heap(ctx);
     }
 
+    virtual void preRender(App_Renderer* renderer)
+    {
+        strcpy(renderer->text, "");
+    }
+
     void render(App_Renderer* renderer)
     {
+        preRender(renderer);
         App_View_JS::display = renderer;
-        strcpy(renderer->text, "");
         if (duk_get_global_string(ctx, "renderer")) {
             duk_call(ctx, 0);
             duk_pop(ctx);
@@ -90,7 +97,7 @@ public:
 
     static duk_ret_t duk_render(duk_context* ctx)
     {
-        strcpy(App_View_JS::display->text, duk_safe_to_string(ctx, 0));
+        strcat(App_View_JS::display->text, duk_safe_to_string(ctx, 0));
         return 0;
     }
 
@@ -100,10 +107,10 @@ public:
         uint8_t col = duk_get_int(ctx, 1);
         uint8_t color = duk_get_int(ctx, 2);
         if (duk_is_undefined(ctx, 3)) {
-            App_View_JS::display->useColor(row, col, color);
+            App_View_JS::display->useColor(row + APP_VIEW_JS_TOP_ROW, col, color);
         } else {
             uint8_t len = duk_get_int(ctx, 3);
-            App_View_JS::display->useColor(row, col, color, len);
+            App_View_JS::display->useColor(row + APP_VIEW_JS_TOP_ROW, col, color, len);
         }
 
         return 0;

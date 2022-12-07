@@ -163,7 +163,7 @@ public:
         lastRow = _lastRow > ROW_COUNT ? ROW_COUNT : _lastRow;
     }
 
-    virtual void initDisplay(App_Renderer* renderer)
+    virtual void preRender(App_Renderer* renderer)
     {
         strcpy(renderer->text, "");
     }
@@ -175,7 +175,7 @@ public:
 
     virtual void render(App_Renderer* renderer)
     {
-        initDisplay(renderer);
+        preRender(renderer);
         for (uint8_t row = renderer->startRow; row < lastRow && row - renderer->startRow < TABLE_VISIBLE_ROWS; row++) {
             // here would come if visible row
             for (uint8_t col = 0; col < COL_COUNT; col++) {
