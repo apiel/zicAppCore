@@ -7,6 +7,7 @@
 #include <app_duk_extra.h>
 #include <duktape.h>
 
+// FIXME Should this be view specific instead!?!
 #define APP_VIEW_JS_TOP_ROW 1
 
 class App_View_JS : public App_View {

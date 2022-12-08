@@ -34,12 +34,10 @@ protected:
 public:
     uint8_t config[APP_CONFIG_SIZE][3];
 
-    virtual const char* getConfigFile() = 0;
-
-    void load()
+    void loadConfig(const char* filepath)
     {
         uint8_t i = 0;
-        Zic_File file(getConfigFile(), "r");
+        Zic_File file(filepath, "r");
         if (file.isOpen()) {
             for (; i < APP_CONFIG_SIZE; i++) {
                 config[i][0] = getFieldCommand(&file);
@@ -63,11 +61,11 @@ public:
         }
     }
 
-    void save()
+    void saveConfig(const char* filepath)
     {
     }
 
-    void logCfg()
+    void logConfig()
     {
         for (uint8_t i = 0; i < APP_CONFIG_SIZE; i++) {
             if (config[i][0] == 255) {
