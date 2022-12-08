@@ -17,6 +17,14 @@ public:
 
     App_View_JS()
     {
+    }
+
+    ~App_View_JS()
+    {
+        duk_destroy_heap(ctx);
+    }
+
+    void loadContext() {
         ctx = duk_create_heap_default();
         duk_push_c_function(ctx, App_View_JS::duk_render, 1);
         duk_put_global_string(ctx, "render");
@@ -43,11 +51,6 @@ public:
         duk_put_global_string(ctx, "COLOR_CURSOR");
     }
 
-    ~App_View_JS()
-    {
-        duk_destroy_heap(ctx);
-    }
-
     virtual void preRender(App_Renderer* renderer)
     {
         strcpy(renderer->text, "");
@@ -68,7 +71,7 @@ public:
         App_View_JS::display = renderer;
         uint8_t res = VIEW_CHANGED;
 
-        if (duk_get_global_string(ctx, "update")) {
+        if (ctx && duk_get_global_string(ctx, "update")) {
             duk_idx_t obj_idx = duk_push_object(ctx);
             duk_push_boolean(ctx, keys->Up);
             duk_put_prop_string(ctx, obj_idx, "Up");
