@@ -86,4 +86,16 @@ void removeLeadingSpaces(char* str)
     }
 }
 
+void removeTrailingSpaces(char* str)
+{
+    char* p = str + strlen(str) - 1;
+    while (p >= str) {
+        if (*p != ' ') {
+            break;
+        }
+        p--;
+    }
+    *(p + 1) = 0;
+}
+
 #endif
