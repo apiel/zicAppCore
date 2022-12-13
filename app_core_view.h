@@ -17,14 +17,6 @@ public:
         return false;
     }
 
-    virtual void snapshot(App_Renderer* renderer)
-    {
-    }
-
-    virtual void loadSnapshot()
-    {
-    }
-
     virtual void focusView()
     {
     }
