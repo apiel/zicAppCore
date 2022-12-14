@@ -19,9 +19,8 @@
 #endif
 
 #ifndef APP_AUDIO_CHUNK
-// #define APP_AUDIO_CHUNK 4096
-// #define APP_AUDIO_CHUNK 2048
-#define APP_AUDIO_CHUNK 1024
+// #define APP_AUDIO_CHUNK 1024
+#define APP_AUDIO_CHUNK 128
 #endif
 
 #include "../app_core_def.h"
