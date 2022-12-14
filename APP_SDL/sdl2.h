@@ -24,10 +24,6 @@
 #define APP_AUDIO_CHUNK 1024
 #endif
 
-// THIS MUST BE ON TOP
-// this include must be before initilizing zic lib, to be sure to override zic_file.h!
-#include "zic_file_sdl.h"
-
 #include "../app_core_def.h"
 #include "display.h"
 #include "zicKeyMap.h"
