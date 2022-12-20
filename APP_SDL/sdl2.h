@@ -74,6 +74,8 @@ bool handleKeyboard(SDL_KeyboardEvent* event)
         ui.keys &= ~(1 << bit); // unset bit (to 0)
     }
 
+    // printf("keys %d\n", ui.keys);
+
     // we could skip keyChange on A repeat
     ui.keysChanged = true;
 
