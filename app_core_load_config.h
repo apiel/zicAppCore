@@ -32,7 +32,7 @@ protected:
     }
 
 public:
-    uint8_t config[APP_CONFIG_SIZE][3];
+    uint8_t config[APP_CONFIG_SIZE][4];
 
     void loadConfig(const char* filepath)
     {
@@ -43,6 +43,7 @@ public:
                 config[i][0] = getFieldCommand(&file);
                 config[i][1] = getFieldNum(&file);
                 config[i][2] = getFieldNum(&file);
+                config[i][3] = getFieldNum(&file);
                 if (config[i][0] == 255) {
                     break;
                 }
@@ -58,6 +59,7 @@ public:
             config[i][0] = 255;
             config[i][1] = 255;
             config[i][2] = 255;
+            config[i][3] = 255;
         }
     }
 
@@ -71,7 +73,7 @@ public:
             if (config[i][0] == 255) {
                 break;
             }
-            APP_LOG("cfg (%d): %d %d %d\n", i, config[i][0], config[i][1], config[i][2]);
+            APP_LOG("cfg (%d): %d %d %d %d\n", i, config[i][0], config[i][1], config[i][2], config[i][3]);
         }
     }
 };
