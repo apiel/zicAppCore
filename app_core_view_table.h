@@ -101,7 +101,6 @@ protected:
     {
         uint8_t start = selectedRow;
         do {
-            // FIXME modulo, dont use motulo but comparison?
             selectedRow = (selectedRow + lastRow + direction) % lastRow;
             if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
                 onSelectRow();
@@ -112,15 +111,31 @@ protected:
 
     void selectNextCol(int8_t direction)
     {
-        uint8_t start = selectedCol;
-        do {
-            // FIXME modulo, dont use motulo but comparison?
-            selectedCol = (selectedCol + COL_COUNT + direction) % COL_COUNT;
-            if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
-                onSelectCol();
-                break;
+        // uint8_t start = selectedCol;
+        // do {
+        //     selectedCol = (selectedCol + COL_COUNT + direction) % COL_COUNT;
+        //     if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
+        //         onSelectCol();
+        //         break;
+        //     }
+        // } while (selectedCol != start);
+
+
+        if (selectedCol + direction > -1 && selectedCol + direction < COL_COUNT) {
+            uint8_t start = selectedCol;
+            while (1) {
+                selectedCol = selectedCol + direction;
+                if (selectedCol < 0 || selectedCol >= COL_COUNT) {
+                    break;
+                }
+                if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
+                    onSelectCol();
+                    return;
+                }
             }
-        } while (selectedCol != start);
+            selectedCol = start;
+        }
+        onNextColOverflow(direction);
     }
 
     virtual void onSelectRow()
@@ -129,6 +144,11 @@ protected:
 
     virtual void onSelectCol()
     {
+    }
+
+    virtual void onNextColOverflow(int8_t direction)
+    {
+        APP_LOG("onNextColOverflow %d\n", direction);
     }
 
 public:
